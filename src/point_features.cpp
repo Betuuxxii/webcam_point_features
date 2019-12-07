@@ -16,11 +16,19 @@ int main(int argc, char *argv[])
 {
     cv::VideoCapture camera; //OpenCV video capture object
     cv::Mat image; //OpenCV image object
-	int cam_id; //camera id . Associated to device number in /dev/videoX
+	  int cam_id; //camera id . Associated to device number in /dev/videoX
     cv::Ptr<cv::ORB> orb_detector = cv::ORB::create(); //ORB point feature detector
     orb_detector->setMaxFeatures(MIN_NUM_FEATURES);
     std::vector<cv::KeyPoint> point_set; //set of point features
     cv::Mat descriptor_set; //set of descriptors, for each feature there is an associated descriptor
+
+    //Variables mascara
+    cv::Ptr<cv::ORB> orb_detector2 = cv::ORB::create(); //ORB point feature detector
+    orb_detector2->setMaxFeatures(MIN_NUM_FEATURES);
+    cv::Mat mask(255 * cv::Mat::ones(image.size(),CV_8U));
+    cv::Mat image_mask;
+    image_mask = image.clone();
+
 
 	//check user args
 	switch(argc)
@@ -73,7 +81,13 @@ int main(int argc, char *argv[])
         //show image
         cv::imshow("Output Window", image);
 
+        // Feature detector
+
+    orb_detector2->detect(image_mask, point_set, mask);
+     cv::drawKeypoints( image, point_set, image_mask, 255, cv::DrawMatchesFlags::DEFAULT );
+     cv::imshow("Output Window with mask", image_mask);
+
 		//Waits 30 millisecond to check if 'q' key has been pressed. If so, breaks the loop. Otherwise continues.
     	if( (unsigned char)(cv::waitKey(30) & 0xff) == 'q' ) break;
-    }   
+    }
 }

@@ -2,7 +2,7 @@
 Detection of ORB features from online webcam imges.
 
 
-#Exercise 1.3. Point features
+# Exercise 1.3. Point features
 
 
 1.  Fork it
